@@ -1,48 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Embedded Web Proxy</title>
-  <style>
-    body { margin: 0; font-family: sans-serif; display: flex; flex-direction: column; height: 100vh; background: #111; color: #fff; }
-    .bar { display: flex; padding: 10px; background: #222; gap: 8px; }
-    input { flex: 1; padding: 8px 12px; border: none; border-radius: 4px; font-size: 16px; }
-    button { padding: 8px 16px; background: #0070f3; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
-    button:hover { background: #005bb5; }
-    iframe { flex: 1; width: 100%; border: none; background: #fff; }
-  </style>
-</head>
-<body>
-  <div class="bar">
-    <input type="text" id="urlInput" placeholder="Enter URL or search..." />
-    <button id="goBtn" type="button">Go</button>
-  </div>
-  <iframe id="proxyFrame"></iframe>
 
-  <script>
-    const urlInput = document.getElementById("urlInput");
-    const goBtn = document.getElementById("goBtn");
-    const proxyFrame = document.getElementById("proxyFrame");
+function loadSite() {
+  const input = urlInput.value.trim();
+  if (!input) return;
 
-    function loadSite() {
-      const input = urlInput.value.trim();
-      if (!input) return;
+  let target;
 
-      let target;
-      if (input.includes(".") && !input.includes(" ")) {
-        target = (input.startsWith("http://") || input.startsWith("https://")) ? input : "https://" + input;
-      } else {
-        target = "https://duckduckgo.com" + encodeURIComponent(input);
-      }
+  if (input.includes(".") && !input.includes(" ")) {
+    target = input.startsWith("http://") || input.startsWith("https://")
+      ? input
+      : "https://" + input;
+  } else {
+    target = "https://duckduckgo.com/?q=" + encodeURIComponent(input);
+  }
 
-      proxyFrame.src = `/.netlify/functions/proxy?url=${encodeURIComponent(target)}`;
-    }
-
-    goBtn.addEventListener("click", loadSite);
-    urlInput.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") loadSite();
-    });
-  </script>
-</body>
-</html>
-
+  window.location.assign(target);
+}
