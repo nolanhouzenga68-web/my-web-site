@@ -1,17 +1,50 @@
 
-function loadSite() {
-  const input = urlInput.value.trim();
-  if (!input) return;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Browser</title>
+</head>
+<body>
 
-  let target;
+  <h2>My Browser</h2>
 
-  if (input.includes(".") && !input.includes(" ")) {
-    target = input.startsWith("http://") || input.startsWith("https://")
-      ? input
-      : "https://" + input;
-  } else {
-    target = "https://duckduckgo.com/?q=" + encodeURIComponent(input);
-  }
+  <form id="searchForm">
+    <input
+      id="urlInput"
+      type="text"
+      placeholder="Search or enter a website"
+      required
+    >
+    <button type="submit">Go</button>
+  </form>
 
-  window.location.assign(target);
-}
+  <script>
+    const form = document.getElementById("searchForm");
+    const input = document.getElementById("urlInput");
+
+    form.addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      const query = input.value.trim();
+      if (!query) return;
+
+      let destination;
+
+      if (/^[a-z0-9-]+(\.[a-z0-9-]+)+(:\d+)?(\/.*)?$/i.test(query)) {
+        destination = query.startsWith("http")
+          ? query
+          : "https://" + query;
+      } else {
+        destination =
+          "https://duckduckgo.com/?q=" +
+          encodeURIComponent(query);
+      }
+
+      window.location.href = destination;
+    });
+  </script>
+
+</body>
+</html>
